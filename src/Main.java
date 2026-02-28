@@ -1,7 +1,5 @@
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -38,5 +36,11 @@ public class Main {
         String concat = a.concat(b);
         System.out.println(concat);
         System.out.println(2%2);
+
+        List<Integer> list = Arrays.asList(1,2,3,4,5,6);
+
+        list.stream()
+                .filter(n -> n % 2 == 0)
+                .forEach(System.out::println);
     }
 }
