@@ -4,29 +4,32 @@ import lld.urlshortner.data.DbRequest;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Database {
 
     private final ConcurrentHashMap<String, DbRequest> db = new ConcurrentHashMap<>();
-    private final static Database instance = null;
-    private static long counter=1;
+    // Proper eager singleton instance
+    private static final Database INSTANCE = new Database();
+
+    // Use AtomicLong for thread-safe incrementing of ids
+    private final AtomicLong counter = new AtomicLong(1);
+
     private Database() {}
 
     public static Database getInstance() {
-        synchronized (Database.class) {
-            return new Database();
-        }
-
+        return INSTANCE;
     }
 
     public void insert(String longUrl, String shortUrl) {
-        DbRequest req = new DbRequest(counter,longUrl,shortUrl);
-        db.put(shortUrl,req);
-        counter++;
+        long id = counter.getAndIncrement();
+        DbRequest req = new DbRequest(id, longUrl, shortUrl);
+        db.put(shortUrl, req);
     }
 
     public Optional<DbRequest> getRequest(String shortUrl) {
-        return Optional.of(db.get(shortUrl));
+        // Use ofNullable to handle missing entries without throwing NPE
+        return Optional.ofNullable(db.get(shortUrl));
     }
 
 }

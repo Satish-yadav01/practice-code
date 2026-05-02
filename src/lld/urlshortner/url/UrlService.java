@@ -29,7 +29,7 @@ public class UrlService {
         if(shortUrl == null || shortUrl.isEmpty()) return "Please pass valid short url";
         if(Objects.isNull(cache.get(shortUrl))){
             DbRequest dbRequest = database.getRequest(shortUrl).orElseThrow();
-            cache.put(shortUrl,dbRequest.getLongUrl());
+            cache.put(shortUrl, dbRequest.getLongUrl());
             return dbRequest.getLongUrl();
         }
         return null;
